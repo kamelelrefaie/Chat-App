@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">LapitChat</string>
+    <string name="this_is_main_activity">this is main activity</string>
+    <string name="need_a_new_account">Need a New Account ?</string>
+    <string name="create_account">Create Account</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="lapit_chat">Lapit Chat</string>
+    <string name="logout">logout</string>
+    <string name="create_a_new_account">Create A New Account</string>
+    <string name="loading">Loading...</string>
+    <string name="already_have_account">ALREADY HAVE ACCOUNT ?</string>
+    <string name="welcome_to_n_lapit_chat">Welcome To\n Lapit Chat</string>
+    <string name="login_to_your_account">login to your account</string>
+    <string name="requests">REQUESTS</string>
+    <string name="chat">CHAT</string>
+    <string name="friends">FRIENDS</string>
+    <string name="display_name">Display Name</string>
+    <string name="avaiable">avaiable</string>
+    <string name="change_image">Change Image</string>
+    <string name="change_status">Change Status</string>
+
+
+</resources>

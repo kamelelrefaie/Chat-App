@@ -30,4 +30,10 @@
 
     </androidx.viewpager.widget.ViewPager>
 
+    <FrameLayout
+        android:id="@+id/main_activity_of"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

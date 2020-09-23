@@ -11,17 +11,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.lapitchat.view.activity.BaseActivity;
+import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.activity.StartActivity;
 
 
 public class BaseFragment extends Fragment {
     public BaseActivity baseActivity;
     public StartActivity startActivity;
+    public MainActivity mainActivity;
     public void setUpActivity() {
         baseActivity = (BaseActivity) getActivity();
         baseActivity.baseFragment = this;
 
         try {
+            mainActivity =(MainActivity) getActivity();
             startActivity = (StartActivity) getActivity();
         } catch (Exception e) {
 

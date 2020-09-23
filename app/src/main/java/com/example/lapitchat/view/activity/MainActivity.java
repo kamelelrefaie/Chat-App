@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -15,6 +17,7 @@ import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.MainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
+import com.example.lapitchat.view.fragment.mainCycle.SettingsFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -30,6 +33,10 @@ public class MainActivity extends BaseActivity {
     TabLayout mainActivityTl;
     @BindView(R.id.main_activity_frame)
     ViewPager mainActivityFrame;
+    @BindView(R.id.main_toolbar_sub_view)
+    RelativeLayout mainToolbarSubView;
+    @BindView(R.id.main_activity_of)
+    FrameLayout mainActivityOf;
 
 
     @Override
@@ -72,9 +79,26 @@ public class MainActivity extends BaseActivity {
                 startActivity(new Intent(this, StartActivity.class));
                 finish();
                 break;
+            case R.id.menu_main_btn_acc:
+                replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
 
         }
         return true;
+    }
+
+    public void setToolBar(int visibility) {
+        mainToolbarSubView.setVisibility(visibility);
+        mainActivityTl.setVisibility(visibility);
+//, String title, View.OnClickListener backActionBtn
+//        if (visibility == View.VISIBLE) {
+//            startToolbarTitle.setText(title);
+//            startToolbarBack.setOnClickListener(backActionBtn);
+//        }
+
+    }
+
+    public void setFrame(int visibility){
+        mainActivityOf.setVisibility(visibility);
     }
 
 

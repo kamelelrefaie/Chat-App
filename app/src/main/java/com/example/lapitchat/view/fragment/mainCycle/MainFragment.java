@@ -36,6 +36,9 @@ public class MainFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         mAuth = FirebaseAuth.getInstance();
+        setUpActivity();
+        mainActivity.setFrame(view.GONE);
+        mainActivity.setToolBar(view.VISIBLE);
         return view;
     }
 
@@ -67,4 +70,6 @@ public class MainFragment extends BaseFragment {
 
 
     }
+
+
 }

@@ -89,16 +89,10 @@ public class MainActivity extends BaseActivity {
     public void setToolBar(int visibility) {
         mainToolbarSubView.setVisibility(visibility);
         mainActivityTl.setVisibility(visibility);
-//, String title, View.OnClickListener backActionBtn
-//        if (visibility == View.VISIBLE) {
-//            startToolbarTitle.setText(title);
-//            startToolbarBack.setOnClickListener(backActionBtn);
-//        }
-
     }
 
     public void setFrame(int visibility){
-        mainActivityOf.setVisibility(visibility);
+       mainActivityOf.setVisibility(visibility);
     }
 
 

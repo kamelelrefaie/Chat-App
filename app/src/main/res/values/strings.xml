@@ -21,6 +21,9 @@
     <string name="avaiable">avaiable</string>
     <string name="change_image">Change Image</string>
     <string name="change_status">Change Status</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="your_status">Your Status</string>
+    <string name="account_settings">Account Settings</string>
 
 
 </resources>

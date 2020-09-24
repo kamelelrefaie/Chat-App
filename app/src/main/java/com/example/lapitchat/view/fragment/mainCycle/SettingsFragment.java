@@ -22,8 +22,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class SettingsFragment extends BaseFragment {
     @BindView(R.id.settings_fragment_img)
@@ -38,7 +41,9 @@ public class SettingsFragment extends BaseFragment {
     Button settingsFragmentBtnStatus;
     private DatabaseReference databaseReference;
     private FirebaseUser mCurrentUser;
- private Unbinder unbinder;
+    private Unbinder unbinder;
+    private StatusFragment statusFragment;
+   private Bundle bundle;
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -49,6 +54,8 @@ public class SettingsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         unbinder = ButterKnife.bind(this, view);
+        bundle = new Bundle();
+        statusFragment = new StatusFragment();
 
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String mUId = mCurrentUser.getUid();
@@ -61,8 +68,8 @@ public class SettingsFragment extends BaseFragment {
                 String status = snapshot.child("status").getValue().toString();
                 String thumb_image = snapshot.child("thumb_image").getValue().toString();
 
-settingsFragmentTxtDisplay.setText(name);
-settingsFragmentTxtStatus.setText(status);
+                settingsFragmentTxtDisplay.setText(name);
+                settingsFragmentTxtStatus.setText(status);
 
             }
 
@@ -84,4 +91,16 @@ settingsFragmentTxtStatus.setText(status);
         startActivity(new Intent(getActivity(), mainActivity.getClass()));
     }
 
+    @OnClick({R.id.settings_fragment_btn_image, R.id.settings_fragment_btn_status})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.settings_fragment_btn_image:
+                break;
+            case R.id.settings_fragment_btn_status:
+                bundle.putString("STATUS_TXT",settingsFragmentTxtStatus.getText().toString());
+                statusFragment.setArguments(bundle);
+                replaceFragment(getActivity().getSupportFragmentManager(),R.id.main_activity_of,statusFragment);
+                break;
+        }
+    }
 }

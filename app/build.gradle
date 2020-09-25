@@ -37,10 +37,13 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.2.3'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.firebase:firebase-database:19.4.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     //circle image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //image cropper
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

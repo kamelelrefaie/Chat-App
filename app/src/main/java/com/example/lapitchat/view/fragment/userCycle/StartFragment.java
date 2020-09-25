@@ -34,8 +34,11 @@ public class StartFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_start, container, false);
         unbinder = ButterKnife.bind(this, view);
+
         setUpActivity();
+
         startActivity.setToolBar(view.GONE, null, null);
+
         return view;
     }
 

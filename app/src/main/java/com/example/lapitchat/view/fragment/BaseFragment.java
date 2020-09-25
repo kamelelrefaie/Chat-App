@@ -16,16 +16,24 @@ import com.example.lapitchat.view.activity.StartActivity;
 
 
 public class BaseFragment extends Fragment {
+
     public BaseActivity baseActivity;
     public StartActivity startActivity;
     public MainActivity mainActivity;
+
     public void setUpActivity() {
         baseActivity = (BaseActivity) getActivity();
         baseActivity.baseFragment = this;
 
         try {
             mainActivity =(MainActivity) getActivity();
+
+        }catch (Exception r){
+
+        }
+        try {
             startActivity = (StartActivity) getActivity();
+
         } catch (Exception e) {
 
         }

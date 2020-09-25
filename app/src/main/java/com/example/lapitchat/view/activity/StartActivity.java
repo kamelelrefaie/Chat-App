@@ -37,6 +37,7 @@ public class StartActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         ButterKnife.bind(this);
+
         replaceFragment(getSupportFragmentManager(), R.id.start_activity_frame, new StartFragment());
     }
 

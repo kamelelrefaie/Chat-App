@@ -24,6 +24,7 @@
     <string name="save_changes">Save Changes</string>
     <string name="your_status">Your Status</string>
     <string name="account_settings">Account Settings</string>
+    <string name="select_image">Select Image</string>
 
 
 </resources>

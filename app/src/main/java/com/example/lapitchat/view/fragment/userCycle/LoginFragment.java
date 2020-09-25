@@ -59,6 +59,7 @@ public class LoginFragment extends BaseFragment {
         loadingDialog = new LoadingDialog(getActivity());
 
         setUpActivity();
+
         startActivity.setToolBar(view.VISIBLE, getString(R.string.create_account), new View.OnClickListener() {
             @Override
             public void onClick(View view) {

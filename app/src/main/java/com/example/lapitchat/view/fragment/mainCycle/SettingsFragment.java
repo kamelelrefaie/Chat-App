@@ -112,10 +112,12 @@ public class SettingsFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.settings_fragment_btn_image:
                 // start picker to get image for cropping and then use the image in cropping activity
+
+
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1,1)
-                        .start(getActivity());
+                        .start(getContext(), this);
 
                /* Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
@@ -137,8 +139,7 @@ public class SettingsFragment extends BaseFragment {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
-                CropImage.activity(resultUri)
-                        .start(getActivity());
+
                 mStorageRef.putFile(resultUri)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override

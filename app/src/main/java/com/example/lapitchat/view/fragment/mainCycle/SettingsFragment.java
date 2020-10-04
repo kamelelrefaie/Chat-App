@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.lapitchat.R;
+import com.example.lapitchat.helper.LoadingDialog;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +33,8 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.util.UUID;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -39,6 +42,7 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class SettingsFragment extends BaseFragment {
@@ -59,7 +63,8 @@ public class SettingsFragment extends BaseFragment {
     private Bundle bundle;
     private static final int GALLERY_PICK = 1;
     private StorageReference mStorageRef;
-
+    private StorageReference mStorageImageRef;
+    private LoadingDialog loadingDialog;
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -72,7 +77,8 @@ public class SettingsFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         bundle = new Bundle();
         statusFragment = new StatusFragment();
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("profile_images").child("image.jpg");
+        mStorageRef = FirebaseStorage.getInstance().getReference().child("profile_images");
+        mStorageImageRef=FirebaseStorage.getInstance().getReference().child("profile_images");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String mUId = mCurrentUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUId);
@@ -85,6 +91,7 @@ public class SettingsFragment extends BaseFragment {
                 String thumb_image = snapshot.child("thumb_image").getValue().toString();
 
                 settingsFragmentTxtDisplay.setText(name);
+            onLoadImageFromUrl(settingsFragmentImg,image,getActivity());
                 settingsFragmentTxtStatus.setText(status);
 
             }
@@ -138,23 +145,26 @@ public class SettingsFragment extends BaseFragment {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+                loadingDialog = new LoadingDialog(getActivity());
+                loadingDialog.startLoadingDialog();
                 Uri resultUri = result.getUri();
 
-                mStorageRef.putFile(resultUri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                  String Current_uID= mCurrentUser.getUid();
+                 mStorageRef = mStorageImageRef.child(Current_uID+".jpg");
+
+                mStorageRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Get a URL to the uploaded content
-                                Toast.makeText(getActivity(), "success", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle unsuccessful uploads
-                                // ...
-                            }
+                            public void onSuccess(Uri uri) {
+                                databaseReference.child("image").setValue(uri.toString());                            }
                         });
+                        loadingDialog.dismissDialog();
+                    }
+                });
+
+
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();

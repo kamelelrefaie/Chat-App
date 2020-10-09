@@ -23,8 +23,9 @@
     <string name="change_status">Change Status</string>
     <string name="save_changes">Save Changes</string>
     <string name="your_status">Your Status</string>
-    <string name="account_settings">Account Settings</string>
     <string name="select_image">Select Image</string>
+    <string name="all_users">All users</string>
+    <string name="account_settings">Account Settings</string>
 
 
 </resources>

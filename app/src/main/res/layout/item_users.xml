@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dim_15dp"
+
+    >
+<LinearLayout
+    android:id="@+id/users_adapter_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/users_adapter_img"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/ic_default" />
+
+    <TextView
+        android:id="@+id/users_adapter_txt_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="display name"
+        android:layout_toEndOf="@+id/users_adapter_img"
+        android:layout_marginStart="@dimen/dim_10dp"
+        android:textColor="@color/black"
+        />
+    <TextView
+        android:id="@+id/users_adapter_txt_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/users_adapter_txt_display"
+        android:layout_toEndOf="@+id/users_adapter_img"
+        android:layout_marginStart="@dimen/dim_7dp"
+        android:text="@string/your_status"
+        />
+    </RelativeLayout>
+</LinearLayout>
+</androidx.cardview.widget.CardView>

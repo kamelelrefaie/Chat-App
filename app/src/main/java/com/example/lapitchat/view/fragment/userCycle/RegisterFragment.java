@@ -98,7 +98,7 @@ private LoadingDialog loadingDialog ;
 
                             HashMap<String,String> userMap = new HashMap<>();
                             userMap.put("name", sName);
-                            userMap.put("status","getString(R.string.avaiable)");
+                            userMap.put("status","hey iam using chat app");
                             userMap.put("image","default");
                             userMap.put("thumb_image", "default");
 

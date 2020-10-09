@@ -13,11 +13,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.ViewPagerAdapter;
+import com.example.lapitchat.view.fragment.EmptyFragment;
 import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.MainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.SettingsFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.StatusFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.UsersFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -81,7 +84,10 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_main_btn_acc:
                 replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
-
+             break;
+            case R.id.menu_main_btn_all:
+               replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, new UsersFragment());
+                break;
         }
         return true;
     }

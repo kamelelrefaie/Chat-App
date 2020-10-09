@@ -1,6 +1,7 @@
-package com.example.lapitchat.view.fragment.mainCycle;
+package com.example.lapitchat.view.fragment.mainCycle.menuPackage;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,10 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
@@ -33,13 +32,16 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.util.UUID;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
@@ -65,6 +67,7 @@ public class SettingsFragment extends BaseFragment {
     private StorageReference mStorageRef;
     private StorageReference mStorageImageRef;
     private LoadingDialog loadingDialog;
+    byte[] imageByte;
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -78,7 +81,7 @@ public class SettingsFragment extends BaseFragment {
         bundle = new Bundle();
         statusFragment = new StatusFragment();
         mStorageRef = FirebaseStorage.getInstance().getReference().child("profile_images");
-        mStorageImageRef=FirebaseStorage.getInstance().getReference().child("profile_images");
+        mStorageImageRef = FirebaseStorage.getInstance().getReference().child("profile_images");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String mUId = mCurrentUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUId);
@@ -91,7 +94,8 @@ public class SettingsFragment extends BaseFragment {
                 String thumb_image = snapshot.child("thumb_image").getValue().toString();
 
                 settingsFragmentTxtDisplay.setText(name);
-            onLoadImageFromUrl(settingsFragmentImg,image,getActivity());
+                if (!image.equals("default"))
+                    onLoadImageFromUrl(settingsFragmentImg, image, getActivity());
                 settingsFragmentTxtStatus.setText(status);
 
             }
@@ -123,7 +127,7 @@ public class SettingsFragment extends BaseFragment {
 
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        .setAspectRatio(1,1)
+                        .setAspectRatio(1, 1)
                         .start(getContext(), this);
 
                /* Intent galleryIntent = new Intent();
@@ -148,21 +152,67 @@ public class SettingsFragment extends BaseFragment {
                 loadingDialog = new LoadingDialog(getActivity());
                 loadingDialog.startLoadingDialog();
                 Uri resultUri = result.getUri();
+                File imageFile = new File(resultUri.getPath());
+                try {
+                    Bitmap  compressedImageBitmap = new Compressor(getContext())
+                            .setMaxHeight(200).setMaxHeight(200)
+                            .setQuality(75)
+                            .compressToBitmap(imageFile);
 
-                  String Current_uID= mCurrentUser.getUid();
-                 mStorageRef = mStorageImageRef.child(Current_uID+".jpg");
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    imageByte= baos.toByteArray();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                String Current_uID = mCurrentUser.getUid();
+                mStorageRef = mStorageImageRef.child(Current_uID + ".jpg");
+               StorageReference bitmapPath = mStorageImageRef.child("thumbs").child(Current_uID + ".jpg");
 
                 mStorageRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
                         mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                databaseReference.child("image").setValue(uri.toString());                            }
+
+                                databaseReference.child("image").setValue(uri.toString());
+
+
+                                UploadTask uploadTask = bitmapPath.putBytes(imageByte);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                        try {
+
+                                        }catch (Exception e){
+
+                                        }
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                     bitmapPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                         @Override
+                                         public void onSuccess(Uri uri) {
+                                             databaseReference.child("thumb_image").setValue(uri.toString());
+                                         }
+
+                                     });
+                                    }
+                                });
+
+                            }
                         });
                         loadingDialog.dismissDialog();
                     }
                 });
+
 
 
 

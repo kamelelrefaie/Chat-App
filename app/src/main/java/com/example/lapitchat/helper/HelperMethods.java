@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.example.lapitchat.R;
 
 public class HelperMethods {
     public static void replaceFragment(FragmentManager getChildFragmentManager, int id, Fragment fragment) {
@@ -20,6 +21,7 @@ public class HelperMethods {
     public static void onLoadImageFromUrl(ImageView imageView, String URl, Context context) {
         Glide.with(context)
                 .load(URl)
+                .placeholder(R.drawable.ic_default) //create place holder
                 .into(imageView);
     }
 }

@@ -11,4 +11,6 @@
     <dimen name="dim_170dp">170dp</dimen>
     <dimen name="txt_30sp">30sp</dimen>
     <dimen name="dim_40dp">40dp</dimen>
+    <dimen name="dim_15dp">15dp</dimen>
+    <dimen name="dim_7dp">7dp</dimen>
 </resources>

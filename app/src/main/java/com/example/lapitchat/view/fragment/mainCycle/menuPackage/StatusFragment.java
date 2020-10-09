@@ -1,14 +1,12 @@
-package com.example.lapitchat.view.fragment.mainCycle;
+package com.example.lapitchat.view.fragment.mainCycle.menuPackage;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,8 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
-import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;

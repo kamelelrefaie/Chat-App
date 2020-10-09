@@ -10,7 +10,7 @@
         android:layout_height="@dimen/dim_170dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dim_120dp"
-        android:src="@drawable/ic_person" />
+        android:src="@drawable/ic_default" />
 
     <TextView
         android:id="@+id/settings_fragment_txt_display"

@@ -6,7 +6,6 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="email">Email</string>
-    <string name="name">Name</string>
     <string name="lapit_chat">Lapit Chat</string>
     <string name="logout">logout</string>
     <string name="create_a_new_account">Create A New Account</string>
@@ -26,6 +25,9 @@
     <string name="select_image">Select Image</string>
     <string name="all_users">All users</string>
     <string name="account_settings">Account Settings</string>
+    <string name="name">Name</string>
+    <string name="send_friend_request">Send Friend Request</string>
+    <string name="total_friends">Total Friends</string>
 
 
 </resources>

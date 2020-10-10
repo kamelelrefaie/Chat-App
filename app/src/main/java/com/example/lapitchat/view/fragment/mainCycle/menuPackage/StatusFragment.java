@@ -68,6 +68,8 @@ public class StatusFragment extends BaseFragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String uID = firebaseUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uID).child("status");
+setUpActivity();
+        mainActivity.setFrame(view.VISIBLE);
 
         return view;
     }

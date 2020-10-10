@@ -1,4 +1,4 @@
-package com.example.lapitchat.view.fragment.mainCycle.menuPackage;
+package com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,13 +13,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.model.Model;
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.UsersViewHolder;
 import com.example.lapitchat.data.Users;
 import com.example.lapitchat.view.fragment.BaseFragment;
-import com.example.lapitchat.view.fragment.mainCycle.MainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.ProfileFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;

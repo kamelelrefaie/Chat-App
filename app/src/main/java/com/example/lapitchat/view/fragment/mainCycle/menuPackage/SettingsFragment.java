@@ -68,6 +68,7 @@ public class SettingsFragment extends BaseFragment {
     private StorageReference mStorageImageRef;
     private LoadingDialog loadingDialog;
     byte[] imageByte;
+
     public SettingsFragment() {
         // Required empty public constructor
     }
@@ -154,14 +155,14 @@ public class SettingsFragment extends BaseFragment {
                 Uri resultUri = result.getUri();
                 File imageFile = new File(resultUri.getPath());
                 try {
-                    Bitmap  compressedImageBitmap = new Compressor(getContext())
+                    Bitmap compressedImageBitmap = new Compressor(getContext())
                             .setMaxHeight(200).setMaxHeight(200)
                             .setQuality(75)
                             .compressToBitmap(imageFile);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     compressedImageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                    imageByte= baos.toByteArray();
+                    imageByte = baos.toByteArray();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -170,7 +171,7 @@ public class SettingsFragment extends BaseFragment {
 
                 String Current_uID = mCurrentUser.getUid();
                 mStorageRef = mStorageImageRef.child(Current_uID + ".jpg");
-               StorageReference bitmapPath = mStorageImageRef.child("thumbs").child(Current_uID + ".jpg");
+                StorageReference bitmapPath = mStorageImageRef.child("thumbs").child(Current_uID + ".jpg");
 
                 mStorageRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -190,20 +191,20 @@ public class SettingsFragment extends BaseFragment {
                                         // Handle unsuccessful uploads
                                         try {
 
-                                        }catch (Exception e){
+                                        } catch (Exception e) {
 
                                         }
                                     }
                                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override
                                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                     bitmapPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                         @Override
-                                         public void onSuccess(Uri uri) {
-                                             databaseReference.child("thumb_image").setValue(uri.toString());
-                                         }
+                                        bitmapPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri) {
+                                                databaseReference.child("thumb_image").setValue(uri.toString());
+                                            }
 
-                                     });
+                                        });
                                     }
                                 });
 
@@ -212,8 +213,6 @@ public class SettingsFragment extends BaseFragment {
                         loadingDialog.dismissDialog();
                     }
                 });
-
-
 
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

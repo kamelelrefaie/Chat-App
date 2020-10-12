@@ -55,7 +55,7 @@ public class ProfileFragment extends BaseFragment {
     private String thisUserId;
     private String Uid;
     private LoadingDialog loadingDialog;
-    private int currentState;
+    private String currentState;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -69,7 +69,7 @@ public class ProfileFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        currentState = 0;
+
         //creating loading dialog and start it
         loadingDialog = new LoadingDialog(getActivity());
         loadingDialog.startLoadingDialog();
@@ -101,6 +101,8 @@ public class ProfileFragment extends BaseFragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+
+                currentState = "not_friends";
                 //setting display name
                 String name = snapshot.child("name").getValue().toString();
                 profileFragmentTxtName.setText(name);
@@ -113,8 +115,10 @@ public class ProfileFragment extends BaseFragment {
                 String img_url = snapshot.child("image").getValue().toString();
                 onLoadImageFromUrl(profileFragmentImg, img_url, getContext());
 
-                //dismiss dialog
-                loadingDialog.dismissDialog();
+                //changing btn according to app state
+                 changeBtn();
+
+
 
             }
 
@@ -132,8 +136,38 @@ public class ProfileFragment extends BaseFragment {
      sendRequest();
     }
 
+    private void changeBtn(){
+        friendDatabaseReference.child(thisUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild(Uid)){
+                    // getting request type
+                    String requestType = snapshot.child(Uid).child("request_type").getValue().toString();
+
+                    if(requestType.equals("received")){
+                        currentState = "req_received";
+                        profileFragmentBtnSend.setText(R.string.accept_friend_request);
+                    }else if(requestType.equals("sent")){
+                        currentState = "req_sent";
+                        profileFragmentBtnSend.setText(R.string.cancel_friend_request);
+                    }
+                }
+
+                //dismiss dialog
+                loadingDialog.dismissDialog();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void sendRequest(){
-        if (currentState == 0) {
+        profileFragmentBtnSend.setEnabled(false);
+
+        if (currentState.equals("not_friends")) {
             friendDatabaseReference.child(thisUserId).child(Uid).child("request_type").setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -141,6 +175,9 @@ public class ProfileFragment extends BaseFragment {
                         friendDatabaseReference.child(Uid).child(thisUserId).child("request_type").setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
+                                profileFragmentBtnSend.setEnabled(true);
+                                currentState = "req_sent";
+                                profileFragmentBtnSend.setText(R.string.cancel_friend_request);
                                 Toast.makeText(getActivity(), "done sending request", Toast.LENGTH_SHORT).show();
 
                             }
@@ -151,11 +188,28 @@ public class ProfileFragment extends BaseFragment {
                 }
             });
         }
-    }
+          // request sent
+        if(currentState.equals("req_sent")){
+            friendDatabaseReference.child(thisUserId).child(Uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    friendDatabaseReference.child(Uid).child(thisUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            profileFragmentBtnSend.setEnabled(true);
+                            currentState = "not_friends";
+                            profileFragmentBtnSend.setText(R.string.send_friend_request);
+                        }
+                    });
+                }
+            });
+        }
 
+    }
     @Override
     public void onBack() {
         replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new UsersFragment());
     }
+
 
 }

@@ -28,6 +28,8 @@
     <string name="name">Name</string>
     <string name="send_friend_request">Send Friend Request</string>
     <string name="total_friends">Total Friends</string>
+    <string name="cancel_friend_request">cancel friend request</string>
+    <string name="accept_friend_request">accept friend request</string>
 
 
 </resources>

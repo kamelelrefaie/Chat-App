@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.UsersViewHolder;
-import com.example.lapitchat.data.Users;
+import com.example.lapitchat.data.model.Users;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

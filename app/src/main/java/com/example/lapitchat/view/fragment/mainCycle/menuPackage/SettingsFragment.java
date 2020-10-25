@@ -45,6 +45,7 @@ import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
+import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrlOff;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class SettingsFragment extends BaseFragment {
@@ -86,6 +87,7 @@ public class SettingsFragment extends BaseFragment {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String mUId = mCurrentUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUId);
+        databaseReference.keepSynced(true);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -95,8 +97,14 @@ public class SettingsFragment extends BaseFragment {
                 String thumb_image = snapshot.child("thumb_image").getValue().toString();
 
                 settingsFragmentTxtDisplay.setText(name);
-                if (!image.equals("default"))
-                    onLoadImageFromUrl(settingsFragmentImg, image, getActivity());
+                
+                if (!image.equals("default")){
+                    onLoadImageFromUrlOff(settingsFragmentImg, image, getActivity());
+                }
+
+
+
+
                 settingsFragmentTxtStatus.setText(status);
 
             }

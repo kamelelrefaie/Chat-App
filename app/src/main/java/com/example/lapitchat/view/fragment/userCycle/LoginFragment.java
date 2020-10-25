@@ -31,6 +31,7 @@ import butterknife.Unbinder;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class LoginFragment extends BaseFragment {
+
     @BindView(R.id.login_fragment_til_email)
     TextInputLayout loginFragmentTilEmail;
     @BindView(R.id.login_fragment_til_password)
@@ -41,6 +42,7 @@ public class LoginFragment extends BaseFragment {
     LinearLayout loginFragmentLl;
     @BindView(R.id.login_fragment_rl)
     RelativeLayout loginFragmentRl;
+
     private FirebaseAuth mAuth;
     private LoadingDialog loadingDialog;
     Unbinder unbinder;
@@ -55,32 +57,44 @@ public class LoginFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        //get user auth
         mAuth = FirebaseAuth.getInstance();
+        // initialize loading dialog
         loadingDialog = new LoadingDialog(getActivity());
-
+        //setting start activity
         setUpActivity();
-
-        startActivity.setToolBar(view.VISIBLE, getString(R.string.create_account), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                replaceFragment(getActivity().getSupportFragmentManager(), R.id.start_activity_frame, new StartFragment());
-            }
-        });
-
+        // set toolbar
+        setLoginToolBar(view);
 
         return view;
 
 
     }
 
+
+    private void setLoginToolBar(View view) {
+        startActivity.setToolBar(view.VISIBLE, getString(R.string.create_account), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // go to start fragment
+                replaceFragment(getActivity().getSupportFragmentManager(), R.id.start_activity_frame, new StartFragment());
+            }
+        });
+    }
+
+
     @OnClick(R.id.login_fragment_btn_login)
     public void onViewClicked() {
+        // getting email and password from edit text
         String sEmail = loginFragmentTilEmail.getEditText().getText().toString();
         String sPassword = loginFragmentTilPassword.getEditText().getText().toString();
-        if ( !TextUtils.isEmpty(sEmail) || !TextUtils.isEmpty(sPassword)) {
+
+        if (!TextUtils.isEmpty(sEmail) || !TextUtils.isEmpty(sPassword)) {
             loadingDialog.startLoadingDialog();
-            loginUser( sEmail, sPassword);
+            loginUser(sEmail, sPassword);
         }
+
     }
 
     private void loginUser(String sEmail, String sPassword) {
@@ -100,8 +114,8 @@ public class LoginFragment extends BaseFragment {
                             Toast.makeText(getActivity(), "Login Failed",
                                     Toast.LENGTH_SHORT).show();
                         }
-    }
-});
+                    }
+                });
     }
 
 }

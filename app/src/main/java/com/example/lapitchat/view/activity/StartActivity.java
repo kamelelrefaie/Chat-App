@@ -20,7 +20,6 @@ import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class StartActivity extends BaseActivity {
 
-
     @BindView(R.id.start_toolbar)
     Toolbar startToolbar;
     @BindView(R.id.start_toolbar_back)
@@ -38,9 +37,17 @@ public class StartActivity extends BaseActivity {
         setContentView(R.layout.activity_start);
         ButterKnife.bind(this);
 
+        // move to start activity
         replaceFragment(getSupportFragmentManager(), R.id.start_activity_frame, new StartFragment());
     }
 
+    /**
+     * this method help us to set toolbar
+     *
+     * @param visibility    to set the toolbar visibility
+     * @param title         this variable to set the toolbar title
+     * @param backActionBtn set toolbar back btn
+     */
     public void setToolBar(int visibility, String title, View.OnClickListener backActionBtn) {
         startToolbarSubView.setVisibility(visibility);
 

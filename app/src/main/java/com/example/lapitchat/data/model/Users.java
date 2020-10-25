@@ -1,4 +1,4 @@
-package com.example.lapitchat.data;
+package com.example.lapitchat.data.model;
 
 public class Users {
     public String image;

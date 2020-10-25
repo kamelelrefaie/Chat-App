@@ -30,6 +30,7 @@
     <string name="total_friends">Total Friends</string>
     <string name="cancel_friend_request">cancel friend request</string>
     <string name="accept_friend_request">accept friend request</string>
+    <string name="remove_this_person">remove this person</string>
 
 
 </resources>

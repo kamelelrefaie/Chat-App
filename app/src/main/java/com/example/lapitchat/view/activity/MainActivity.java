@@ -28,7 +28,12 @@ import butterknife.ButterKnife;
 
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
+/**
+ * this is launcher activity
+ */
+
 public class MainActivity extends BaseActivity {
+
     @BindView(R.id.main_toolbar)
     Toolbar toolbar;
     @BindView(R.id.main_activity_tl)
@@ -46,9 +51,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        //go to main activity
         replaceFragment(getSupportFragmentManager(), R.id.main_activity_frame, new MainFragment());
+
         setSupportActionBar(toolbar);
         mainActivityTl.setupWithViewPager(mainActivityFrame);
+
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
 
         viewPagerAdapter.addFragment(new RequestMainFragment(), getString(R.string.requests));
@@ -57,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
 
         mainActivityFrame.setAdapter(viewPagerAdapter);
-
+        //setting tabs icons
         mainActivityTl.getTabAt(0).setIcon(R.drawable.ic_request);
         mainActivityTl.getTabAt(1).setIcon(R.drawable.ic_chat);
         mainActivityTl.getTabAt(2).setIcon(R.drawable.ic_friends);

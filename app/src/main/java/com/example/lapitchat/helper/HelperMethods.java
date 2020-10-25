@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.lapitchat.R;
 
 public class HelperMethods {
@@ -24,4 +25,13 @@ public class HelperMethods {
                 .placeholder(R.drawable.ic_default) //create place holder
                 .into(imageView);
     }
+    public static void onLoadImageFromUrlOff(ImageView imageView, String URl, Context context) {
+        Glide.with(context)
+                .load(URl)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .placeholder(R.drawable.ic_default) //create place holder
+                .into(imageView);
+    }
+
+
 }

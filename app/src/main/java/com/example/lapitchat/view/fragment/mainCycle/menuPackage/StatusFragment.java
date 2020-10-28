@@ -33,20 +33,22 @@ import butterknife.Unbinder;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class StatusFragment extends BaseFragment {
+
     @BindView(R.id.start_toolbar)
     Toolbar startToolbar;
     @BindView(R.id.start_toolbar_back)
     ImageButton startToolbarBack;
     @BindView(R.id.start_toolbar_title)
     TextView startToolbarTitle;
-
     @BindView(R.id.status_fragment_til)
     TextInputLayout statusFragmentTil;
     @BindView(R.id.status_fragment_btn_change)
     Button statusFragmentBtnChange;
     Unbinder unbinder;
-    private  Bundle bundle;
+
+    private Bundle bundle;
     private LoadingDialog loadingDialog;
+
     private DatabaseReference databaseReference;
     private FirebaseUser firebaseUser;
 
@@ -61,14 +63,21 @@ public class StatusFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_status, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        // use bundle here to retrieve data
         bundle = this.getArguments();
         statusFragmentTil.getEditText().setText(bundle.getString("STATUS_TXT"));
+
+        //set toolbar
         startToolbarTitle.setText(R.string.account_settings);
         loadingDialog = new LoadingDialog(getActivity());
+
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String uID = firebaseUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uID).child("status");
-setUpActivity();
+
+        //setting activity
+        setUpActivity();
         mainActivity.setFrame(view.VISIBLE);
 
         return view;
@@ -76,17 +85,23 @@ setUpActivity();
 
     @OnClick(R.id.status_fragment_btn_change)
     public void onViewClicked() {
+
         loadingDialog.startLoadingDialog();
         String getStatus = statusFragmentTil.getEditText().getText().toString();
+
         databaseReference.setValue(getStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    loadingDialog.dismissDialog();
-                    Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
-                } else {
-                    loadingDialog.dismissDialog();
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                try {
+                    if (task.isSuccessful()) {
+                        loadingDialog.dismissDialog();
+                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        loadingDialog.dismissDialog();
+                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e){
+
                 }
             }
         });
@@ -95,11 +110,13 @@ setUpActivity();
 
     @OnClick(R.id.start_toolbar_back)
     public void onBackClicked() {
-       replaceFragment(getActivity().getSupportFragmentManager(),R.id.main_activity_of,new SettingsFragment());
+        // go to settings fragment
+        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
     }
 
     @Override
     public void onBack() {
-        replaceFragment(getActivity().getSupportFragmentManager(),R.id.main_activity_of,new SettingsFragment());
+        // go to settings fragment
+        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
     }
 }

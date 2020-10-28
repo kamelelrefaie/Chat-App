@@ -59,16 +59,20 @@ public class SettingsFragment extends BaseFragment {
     Button settingsFragmentBtnImage;
     @BindView(R.id.settings_fragment_btn_status)
     Button settingsFragmentBtnStatus;
+
     private DatabaseReference databaseReference;
     private FirebaseUser mCurrentUser;
-    private Unbinder unbinder;
-    private StatusFragment statusFragment;
-    private Bundle bundle;
-    private static final int GALLERY_PICK = 1;
     private StorageReference mStorageRef;
     private StorageReference mStorageImageRef;
+
     private LoadingDialog loadingDialog;
+
+    private static final int GALLERY_PICK = 1;
     byte[] imageByte;
+
+    private StatusFragment statusFragment;
+    private Bundle bundle;
+    private Unbinder unbinder;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -80,52 +84,74 @@ public class SettingsFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         unbinder = ButterKnife.bind(this, view);
+        // get info from this fragment and send it to another one through bundle
         bundle = new Bundle();
         statusFragment = new StatusFragment();
+
         mStorageRef = FirebaseStorage.getInstance().getReference().child("profile_images");
         mStorageImageRef = FirebaseStorage.getInstance().getReference().child("profile_images");
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String mUId = mCurrentUser.getUid();
+
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mUId);
+        // adding firebase offline features
         databaseReference.keepSynced(true);
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String name = snapshot.child("name").getValue().toString();
-                String image = snapshot.child("image").getValue().toString();
-                String status = snapshot.child("status").getValue().toString();
-                String thumb_image = snapshot.child("thumb_image").getValue().toString();
 
-                settingsFragmentTxtDisplay.setText(name);
-                
-                if (!image.equals("default")){
-                    onLoadImageFromUrlOff(settingsFragmentImg, image, getActivity());
-                }
+        //set values
+        getValues(databaseReference);
 
-
-
-
-                settingsFragmentTxtStatus.setText(status);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        //setting activity
         setUpActivity();
         mainActivity.setToolBar(view.GONE);
         mainActivity.setFrame(view.VISIBLE);
 
-
         return view;
     }
 
-    @Override
-    public void onBack() {
-        startActivity(new Intent(getActivity(), mainActivity.getClass()));
+
+    /**
+     * this method used to set values
+     *
+     * @param databaseReference get database ref from current fragment
+     */
+    private void getValues(DatabaseReference databaseReference) {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+
+                    //getting values from database
+                    String name = snapshot.child("name").getValue().toString();
+                    String image = snapshot.child("image").getValue().toString();
+                    String status = snapshot.child("status").getValue().toString();
+
+                    // set values
+                    settingsFragmentTxtDisplay.setText(name);
+
+                    if (!image.equals("default")) {
+                        onLoadImageFromUrlOff(settingsFragmentImg, image, getActivity());
+                    }
+
+                    settingsFragmentTxtStatus.setText(status);
+                } catch (Exception e) {
+
+                }
+
+            }//in data changed
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                try {
+
+                } catch (Exception e) {
+
+                }
+            }
+        });
     }
+
+    // change image and status
 
     @OnClick({R.id.settings_fragment_btn_image, R.id.settings_fragment_btn_status})
     public void onViewClicked(View view) {
@@ -133,35 +159,45 @@ public class SettingsFragment extends BaseFragment {
             case R.id.settings_fragment_btn_image:
                 // start picker to get image for cropping and then use the image in cropping activity
 
-
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .setAspectRatio(1, 1)
                         .start(getContext(), this);
-
-               /* Intent galleryIntent = new Intent();
-                galleryIntent.setType("image/*");
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent, getString(R.string.select_image)),GALLERY_PICK);*/
                 break;
+
             case R.id.settings_fragment_btn_status:
+
+                // using bundle here to send information through fragments
                 bundle.putString("STATUS_TXT", settingsFragmentTxtStatus.getText().toString());
                 statusFragment.setArguments(bundle);
+
+                // go to status fragment
                 replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, statusFragment);
                 break;
         }
     }
-
+    /**
+     * using it when we recieve image from cropper
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+
+                //set loading dialog
                 loadingDialog = new LoadingDialog(getActivity());
                 loadingDialog.startLoadingDialog();
+
+                // get cropping image uri
                 Uri resultUri = result.getUri();
                 File imageFile = new File(resultUri.getPath());
+
                 try {
                     Bitmap compressedImageBitmap = new Compressor(getContext())
                             .setMaxHeight(200).setMaxHeight(200)
@@ -180,52 +216,62 @@ public class SettingsFragment extends BaseFragment {
                 String Current_uID = mCurrentUser.getUid();
                 mStorageRef = mStorageImageRef.child(Current_uID + ".jpg");
                 StorageReference bitmapPath = mStorageImageRef.child("thumbs").child(Current_uID + ".jpg");
-
-                mStorageRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-
-                        mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-
-                                databaseReference.child("image").setValue(uri.toString());
-
-
-                                UploadTask uploadTask = bitmapPath.putBytes(imageByte);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
-                                        try {
-
-                                        } catch (Exception e) {
-
-                                        }
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        bitmapPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                            @Override
-                                            public void onSuccess(Uri uri) {
-                                                databaseReference.child("thumb_image").setValue(uri.toString());
-                                            }
-
-                                        });
-                                    }
-                                });
-
-                            }
-                        });
-                        loadingDialog.dismissDialog();
-                    }
-                });
-
+                // upload profile photo and thumb
+                uploadingPhoto(mStorageRef, resultUri, bitmapPath);
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
         }
     }
+
+    private void uploadingPhoto(StorageReference mStorageRef, Uri resultUri, StorageReference bitmapPath) {
+
+        mStorageRef.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                mStorageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        databaseReference.child("image").setValue(uri.toString());
+                        // start uploading thumb
+                        UploadTask uploadTask = bitmapPath.putBytes(imageByte);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                try {
+
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                bitmapPath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        databaseReference.child("thumb_image").setValue(uri.toString());
+                                    }
+
+                                });
+                            }
+                        });
+
+                    }
+                });
+
+                loadingDialog.dismissDialog();
+            }
+        });
+    }
+
+    @Override
+    public void onBack() {
+        startActivity(new Intent(getActivity(), mainActivity.getClass()));
+    }
+
 }

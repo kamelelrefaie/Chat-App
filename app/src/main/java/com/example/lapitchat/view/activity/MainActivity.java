@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +23,7 @@ import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragmen
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,24 +40,26 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.main_activity_tl)
     TabLayout mainActivityTl;
-    @BindView(R.id.main_activity_frame)
-    ViewPager mainActivityFrame;
+    @BindView(R.id.main_activity_vp_frame)
+    ViewPager mainActivityVpFrame;
     @BindView(R.id.main_toolbar_sub_view)
     RelativeLayout mainToolbarSubView;
     @BindView(R.id.main_activity_of)
     FrameLayout mainActivityOf;
 
+    long backTime;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //go to main activity
-        replaceFragment(getSupportFragmentManager(), R.id.main_activity_frame, new MainFragment());
+
+        mAuth = FirebaseAuth.getInstance();
 
         setSupportActionBar(toolbar);
-        mainActivityTl.setupWithViewPager(mainActivityFrame);
+        mainActivityTl.setupWithViewPager(mainActivityVpFrame);
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
 
@@ -63,15 +67,14 @@ public class MainActivity extends BaseActivity {
         viewPagerAdapter.addFragment(new ChatMainFragment(), getString(R.string.chat));
         viewPagerAdapter.addFragment(new FriendsMainFragment(), getString(R.string.friends));
 
+        mainActivityVpFrame.setAdapter(viewPagerAdapter);
 
-        mainActivityFrame.setAdapter(viewPagerAdapter);
         //setting tabs icons
         mainActivityTl.getTabAt(0).setIcon(R.drawable.ic_request);
         mainActivityTl.getTabAt(1).setIcon(R.drawable.ic_chat);
         mainActivityTl.getTabAt(2).setIcon(R.drawable.ic_friends);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,8 +111,40 @@ public class MainActivity extends BaseActivity {
     public void setFrame(int visibility) {
         mainActivityOf.setVisibility(visibility);
         //showing view pager
-        if (visibility == View.VISIBLE) mainActivityFrame.setVisibility(View.GONE);
+        if (visibility == View.VISIBLE) mainActivityVpFrame.setVisibility(View.GONE);
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            sendToStart();
+        }
+
+    }
+
+    /**
+     *  send user to start activity
+     */
+    private void sendToStart() {
+        startActivity(new Intent(MainActivity.this, StartActivity.class));
+        finish();
+    }
+
+
+    @Override
+    public void superBackPressed() {
+        if (backTime + 2000 > System.currentTimeMillis()) {
+            finish();
+            return;
+        } else {
+            Toast.makeText(MainActivity.this, "press back again to exit", Toast.LENGTH_SHORT).show();
+            backTime = System.currentTimeMillis();
+        }
+    }
 }
+
+

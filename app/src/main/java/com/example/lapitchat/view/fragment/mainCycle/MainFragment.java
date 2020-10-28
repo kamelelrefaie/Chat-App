@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.lapitchat.R;
+import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.activity.StartActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,9 +23,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainFragment extends BaseFragment {
-    long  backTime;
+
+    long backTime;
     Unbinder unbinder;
     private FirebaseAuth mAuth;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -35,10 +38,16 @@ public class MainFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         unbinder = ButterKnife.bind(this, view);
+
         mAuth = FirebaseAuth.getInstance();
+
+        //to set up Activity
         setUpActivity();
+
+        //set mainLayout
         mainActivity.setFrame(view.GONE);
         mainActivity.setToolBar(view.VISIBLE);
+
         return view;
     }
 
@@ -50,8 +59,12 @@ public class MainFragment extends BaseFragment {
         if (currentUser == null) {
             sendToStart();
         }
+
     }
 
+    /**
+     *  send user to start activity
+     */
     private void sendToStart() {
         startActivity(new Intent(getActivity(), StartActivity.class));
         getActivity().finish();
@@ -60,16 +73,13 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onBack() {
-        if(backTime + 2000 > System.currentTimeMillis()){
+        super.onBack();
+        if (backTime + 2000 > System.currentTimeMillis()) {
             getActivity().finish();
             return;
-        }else{
+        } else {
             Toast.makeText(getActivity(), "press back again to exit", Toast.LENGTH_SHORT).show();
             backTime = System.currentTimeMillis();
         }
-
-
     }
-
-
 }

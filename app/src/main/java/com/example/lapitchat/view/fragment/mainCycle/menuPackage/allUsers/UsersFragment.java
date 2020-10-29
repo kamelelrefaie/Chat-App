@@ -33,17 +33,17 @@ import butterknife.Unbinder;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class UsersFragment extends BaseFragment {
-       private  ProfileFragment profileFragment;
-       private  Bundle bundle;
+
     @BindView(R.id.start_toolbar)
     Toolbar startToolbar;
     @BindView(R.id.start_toolbar_back)
     ImageButton startToolbarBack;
     @BindView(R.id.start_toolbar_title)
     TextView startToolbarTitle;
-
     @BindView(R.id.all_user_fragment_rv)
     RecyclerView allUserFragmentRv;
+    private ProfileFragment profileFragment;
+    private Bundle bundle;
     private Unbinder unbinder;
     private DatabaseReference myRef;
     private FirebaseRecyclerAdapter adapter;
@@ -58,14 +58,25 @@ public class UsersFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_users, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        //set title
         startToolbarTitle.setText(R.string.all_users);
+
+        //use bundle to send information
         profileFragment = new ProfileFragment();
-        bundle=new Bundle();
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        bundle = new Bundle();
+
         myRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        //set recyclerview
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         allUserFragmentRv.setLayoutManager(layoutManager);
         allUserFragmentRv.setHasFixedSize(true);
+
+        // get data to fill page
         fetch();
+
+        // setup activity
         setUpActivity();
         mainActivity.setToolBar(view.GONE);
         mainActivity.setFrame(view.VISIBLE);
@@ -73,6 +84,7 @@ public class UsersFragment extends BaseFragment {
         return view;
     }
 
+    // using firebase recycler
     private void fetch() {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
@@ -102,43 +114,56 @@ public class UsersFragment extends BaseFragment {
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
-              holder.setTxtDisplay(model.getName());
-              holder.setImage(model.getImage(),getActivity());
-              holder.setTxtStatus(model.getStatus());
-              String Uid = getRef(position).getKey();
-       holder.usersAdapterRoot.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               bundle.putString("USER_ID", Uid);
-               profileFragment.setArguments(bundle);
-       replaceFragment(getActivity().getSupportFragmentManager(),R.id.main_activity_of, profileFragment);
-           }
-       });
+
+                holder.setTxtDisplay(model.getName());
+                holder.setImage(model.getImage(), getActivity());
+                holder.setTxtStatus(model.getStatus());
+                String Uid = getRef(position).getKey();
+
+                // when clicking in whole item
+                holder.usersAdapterRoot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        //send info through bundle
+                        bundle.putString("USER_ID", Uid);
+                        profileFragment.setArguments(bundle);
+
+                        // move to profile fragment
+                        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
+                    }
+                });
 
             }
 
 
         };
+
+        //setting recyclerview adapter
         allUserFragmentRv.setAdapter(adapter);
     }
 
-
+    // adding back feature to toolbar
     @OnClick(R.id.start_toolbar_back)
     public void onViewClicked() {
+        //go to main activity
         startActivity(new Intent(getActivity(), mainActivity.getClass()));
     }
 
+    // send to main activity
     @Override
     public void onBack() {
         startActivity(new Intent(getActivity(), mainActivity.getClass()));
     }
 
+    // running adapter
     @Override
     public void onStart() {
         super.onStart();
         adapter.startListening();
     }
 
+    // stop loading it
     @Override
     public void onStop() {
         super.onStop();

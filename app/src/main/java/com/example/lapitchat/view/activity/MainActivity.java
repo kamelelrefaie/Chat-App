@@ -17,7 +17,6 @@ import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.ViewPagerAdapter;
 import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.MainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersFragment;
@@ -49,7 +48,7 @@ public class MainActivity extends BaseActivity {
 
     long backTime;
     private FirebaseAuth mAuth;
-
+    public RequestMainFragment requestMainFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +62,8 @@ public class MainActivity extends BaseActivity {
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
 
-        viewPagerAdapter.addFragment(new RequestMainFragment(), getString(R.string.requests));
+        requestMainFragment = new RequestMainFragment();
+        viewPagerAdapter.addFragment(requestMainFragment, getString(R.string.requests));
         viewPagerAdapter.addFragment(new ChatMainFragment(), getString(R.string.chat));
         viewPagerAdapter.addFragment(new FriendsMainFragment(), getString(R.string.friends));
 

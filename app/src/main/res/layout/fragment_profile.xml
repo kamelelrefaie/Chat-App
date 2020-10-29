@@ -66,14 +66,27 @@
 
                 <Button
                     android:id="@+id/profile_fragment_btn_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_width="@dimen/dim_300dp"
+                    android:layout_height="@dimen/dim_50dp"
+                    android:layout_above="@id/profile_fragment_btn_decline"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="@dimen/dim_20dp"
                     android:backgroundTint="@color/red"
                     android:text="@string/send_friend_request"
                     android:textSize="@dimen/txt_20sp" />
+
+                <Button
+                    android:id="@+id/profile_fragment_btn_decline"
+                    android:layout_width="@dimen/dim_300dp"
+                    android:layout_height="@dimen/dim_50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/dim_20dp"
+                    android:backgroundTint="@color/red"
+                    android:text="@string/decline_friend_request"
+                    android:textSize="@dimen/txt_20sp" />
+
+
             </RelativeLayout>
         </LinearLayout>
 

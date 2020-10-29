@@ -20,9 +20,6 @@ public class RequestMainFragment extends BaseFragment {
         View view= inflater.inflate(R.layout.freagment_request, container, false);
 
 
-
-
-
         return view;
     }
 }

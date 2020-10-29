@@ -14,7 +14,9 @@ import androidx.annotation.NonNull;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
+import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
+import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,11 +46,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrlOff;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class SettingsFragment extends BaseFragment {
+
     @BindView(R.id.settings_fragment_img)
     CircleImageView settingsFragmentImg;
     @BindView(R.id.settings_fragment_txt_display)

@@ -48,6 +48,8 @@ public class ProfileFragment extends BaseFragment {
     Button profileFragmentBtnSend;
     @BindView(R.id.profile_fragment_img)
     ImageView profileFragmentImg;
+    @BindView(R.id.profile_fragment_btn_decline)
+    Button profileFragmentBtnDecline;
 
     private Unbinder unbinder;
     private Bundle bundle;
@@ -141,7 +143,7 @@ public class ProfileFragment extends BaseFragment {
 // change the state of button
 
     private void changeBtn() {
-           // is current user have the sec one
+        // is current user have the sec one
         friendReqDatabaseReference.child(thisUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -155,20 +157,31 @@ public class ProfileFragment extends BaseFragment {
                         currentState = "req_received";
                         profileFragmentBtnSend.setText(R.string.accept_friend_request);
 
+                        profileFragmentBtnDecline.setVisibility(View.VISIBLE);
+                        profileFragmentBtnDecline.setEnabled(true);
+
+
                     } else if (requestType.equals("sent")) {
                         currentState = "req_sent";
                         profileFragmentBtnSend.setText(R.string.cancel_friend_request);
 
+                        //handling decline btn
+                        profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                        profileFragmentBtnDecline.setEnabled(false);
+
                     }
-                    // if he havent it
-                } else{
+                    // if he haven't it
+                } else {
 
                     friendDatabaseReference.child(thisUserId).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.hasChild(Uid)){
+                            if (snapshot.hasChild(Uid)) {
                                 currentState = "friends";
                                 profileFragmentBtnSend.setText(R.string.remove_this_person);
+
+                                profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                                profileFragmentBtnDecline.setEnabled(false);
                             }
                         }
 
@@ -210,8 +223,12 @@ public class ProfileFragment extends BaseFragment {
                                 profileFragmentBtnSend.setEnabled(true);
                                 currentState = "req_sent";
                                 profileFragmentBtnSend.setText(R.string.cancel_friend_request);
-                                Toast.makeText(getActivity(), "done sending request", Toast.LENGTH_SHORT).show();
 
+                                // handling decline btn
+                                profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                                profileFragmentBtnDecline.setEnabled(false);
+
+                                Toast.makeText(getActivity(), "done sending request", Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {
@@ -221,7 +238,7 @@ public class ProfileFragment extends BaseFragment {
             });
         }
 
-        if (currentState.equals("friends")){
+        if (currentState.equals("friends")) {
             friendDatabaseReference.child(thisUserId).child(Uid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -231,6 +248,10 @@ public class ProfileFragment extends BaseFragment {
                             profileFragmentBtnSend.setEnabled(true);
                             currentState = "not_friends";
                             profileFragmentBtnSend.setText(R.string.send_friend_request);
+
+                            // handling decline btn
+                            profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                            profileFragmentBtnDecline.setEnabled(false);
                         }
                     });
                 }
@@ -248,6 +269,10 @@ public class ProfileFragment extends BaseFragment {
                             profileFragmentBtnSend.setEnabled(true);
                             currentState = "not_friends";
                             profileFragmentBtnSend.setText(R.string.send_friend_request);
+
+                            // handling decline btn
+                            profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                            profileFragmentBtnDecline.setEnabled(false);
                         }
                     });
                 }
@@ -273,6 +298,10 @@ public class ProfileFragment extends BaseFragment {
                                                     profileFragmentBtnSend.setEnabled(true);
                                                     currentState = "friends";
                                                     profileFragmentBtnSend.setText(R.string.remove_this_person);
+
+                                                    // handling decline btn
+                                                    profileFragmentBtnDecline.setVisibility(View.INVISIBLE);
+                                                    profileFragmentBtnDecline.setEnabled(false);
                                                 }
                                             });
                                         }

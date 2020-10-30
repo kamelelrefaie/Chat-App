@@ -32,6 +32,8 @@
     <string name="accept_friend_request">accept friend request</string>
     <string name="remove_this_person">remove this person</string>
     <string name="decline_friend_request">decline friend request</string>
+    <string name="done_sending_friend_request">done sending request</string>
+    <string name="friend_request">Friend Request</string>
 
 
 </resources>

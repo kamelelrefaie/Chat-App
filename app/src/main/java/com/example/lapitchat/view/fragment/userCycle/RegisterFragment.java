@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,6 +50,7 @@ public class RegisterFragment extends BaseFragment {
     private DatabaseReference database;
     private FirebaseAuth mAuth;
     private LoadingDialog loadingDialog;
+    private String uID;
     Unbinder unbinder;
 
     public RegisterFragment() {
@@ -108,7 +108,7 @@ public class RegisterFragment extends BaseFragment {
                             // Sign in success,
 
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            String uID = currentUser.getUid();
+                             uID = currentUser.getUid();
 
                             database = FirebaseDatabase.getInstance().getReference().child("Users").child(uID);
 
@@ -117,6 +117,8 @@ public class RegisterFragment extends BaseFragment {
                             userMap.put("status", "hey iam using chat app");
                             userMap.put("image", "default");
                             userMap.put("thumb_image", "default");
+
+
 
                             //set database
                             setDatabase(userMap);
@@ -150,5 +152,7 @@ public class RegisterFragment extends BaseFragment {
             }
         });
     }
+
+
 
 }

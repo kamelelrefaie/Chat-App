@@ -2,6 +2,7 @@ package com.example.lapitchat.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.ViewPagerAdapter;
+import com.example.lapitchat.helper.notification.Token;
 import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
@@ -23,6 +25,8 @@ import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersF
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +77,9 @@ public class MainActivity extends BaseActivity {
         mainActivityTl.getTabAt(0).setIcon(R.drawable.ic_request);
         mainActivityTl.getTabAt(1).setIcon(R.drawable.ic_chat);
         mainActivityTl.getTabAt(2).setIcon(R.drawable.ic_friends);
+
+
+        UpdateToken();
 
     }
 
@@ -144,6 +151,13 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(MainActivity.this, "press back again to exit", Toast.LENGTH_SHORT).show();
             backTime = System.currentTimeMillis();
         }
+    }
+
+    private void UpdateToken(){
+        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
+        String refreshToken= FirebaseInstanceId.getInstance().getToken();
+        Token token= new Token(refreshToken);
+        FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
     }
 }
 

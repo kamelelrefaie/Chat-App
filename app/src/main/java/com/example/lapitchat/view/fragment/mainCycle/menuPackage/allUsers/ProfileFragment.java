@@ -1,3 +1,5 @@
+
+
 package com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers;
 
 import android.os.Bundle;
@@ -12,7 +14,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.lapitchat.R;
+import com.example.lapitchat.data.model.Data;
+import com.example.lapitchat.data.model.MyResponse;
 import com.example.lapitchat.helper.LoadingDialog;
+import com.example.lapitchat.helper.notification.NotificationSender;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +37,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
+import static com.example.lapitchat.data.api.RetrofitClient.getClient;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
@@ -53,13 +62,15 @@ public class ProfileFragment extends BaseFragment {
 
     private Unbinder unbinder;
     private Bundle bundle;
-
+    private String thisUserName;
     private DatabaseReference databaseReference;
+    private DatabaseReference nameReference;
     private DatabaseReference friendReqDatabaseReference;
     private DatabaseReference friendDatabaseReference;
     private FirebaseUser currentUser;
 
     private String thisUserId;
+
     private String Uid;
 
     private LoadingDialog loadingDialog;
@@ -79,6 +90,7 @@ public class ProfileFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
 
 
+
         //creating loading dialog and start it
         loadingDialog = new LoadingDialog(getActivity());
         loadingDialog.startLoadingDialog();
@@ -95,6 +107,9 @@ public class ProfileFragment extends BaseFragment {
         friendDatabaseReference = FirebaseDatabase.getInstance().getReference().child("friends");
         friendReqDatabaseReference = FirebaseDatabase.getInstance().getReference().child("friend_req");
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(Uid);
+        nameReference = FirebaseDatabase.getInstance().getReference().child("Users").child(thisUserId);
+        getUserName();
+
         setValues(databaseReference);
 
 
@@ -102,6 +117,20 @@ public class ProfileFragment extends BaseFragment {
         setUpActivity();
         mainActivity.setFrame(view.VISIBLE);
         return view;
+    }
+
+    private void getUserName() {
+        nameReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                thisUserName = snapshot.child("name").getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
@@ -229,6 +258,19 @@ public class ProfileFragment extends BaseFragment {
                                 profileFragmentBtnDecline.setEnabled(false);
 
                                 Toast.makeText(getActivity(), "done sending request", Toast.LENGTH_SHORT).show();
+
+                                FirebaseDatabase.getInstance().getReference().child("Tokens").child(Uid).child("token").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String usertoken=dataSnapshot.getValue(String.class);
+                                        sendNotifications(usertoken, getString(R.string.friend_request),thisUserName + " sent you a friend request");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                             }
                         });
                     } else {
@@ -320,4 +362,35 @@ public class ProfileFragment extends BaseFragment {
     }
 
 
+
+    public void sendNotifications(String usertoken, String title, String message) {
+        Data data = new Data(title, message);
+        NotificationSender sender = new NotificationSender(data, usertoken);
+        getClient().sendNotifcation(sender).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                try{
+                    if (response.code() == 200) {
+                        Toast.makeText(getActivity(), "Notification sending", Toast.LENGTH_SHORT).show();
+                        if (response.body().success != 1) {
+                            Toast.makeText(getActivity(), "Failed ", Toast.LENGTH_LONG);
+                        }
+                    }
+
+                }catch (Exception e){
+                    Toast.makeText(getActivity(), "error"+e, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 }
+

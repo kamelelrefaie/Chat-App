@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
+import com.example.lapitchat.helper.notification.Token;
 import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +33,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
+import static com.example.lapitchat.helper.HelperMethods.updateToken;
 
 public class LoginFragment extends BaseFragment {
 
@@ -105,6 +110,9 @@ public class LoginFragment extends BaseFragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             loadingDialog.dismissDialog();
+                            //get user token
+                            updateToken();
+
                             startActivity(new Intent(getActivity(), MainActivity.class));
                             getActivity().finish();
 
@@ -117,5 +125,7 @@ public class LoginFragment extends BaseFragment {
                     }
                 });
     }
+
+
 
 }

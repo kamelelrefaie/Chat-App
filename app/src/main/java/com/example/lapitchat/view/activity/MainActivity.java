@@ -21,6 +21,7 @@ import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.ProfileFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,11 +54,18 @@ public class MainActivity extends BaseActivity {
     long backTime;
     private FirebaseAuth mAuth;
     public RequestMainFragment requestMainFragment;
+
+    private ProfileFragment profileFragment;
+    private Bundle bundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        //use bundle to send information
+            notificationTab();
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -79,7 +87,7 @@ public class MainActivity extends BaseActivity {
         mainActivityTl.getTabAt(2).setIcon(R.drawable.ic_friends);
 
 
-        UpdateToken();
+       // UpdateToken();
 
     }
 
@@ -153,12 +161,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void UpdateToken(){
-        FirebaseUser firebaseUser= FirebaseAuth.getInstance().getCurrentUser();
-        String refreshToken= FirebaseInstanceId.getInstance().getToken();
-        Token token= new Token(refreshToken);
-        FirebaseDatabase.getInstance().getReference("Tokens").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(token);
+private void notificationTab(){
+    profileFragment = new ProfileFragment();
+    bundle = new Bundle();
+    String intentInfo =getIntent().getAction();
+    if(intentInfo == ("USER_PAGE") ) {
+        // Open Tab
+        Bundle extras = getIntent().getExtras();
+        if (!extras.isEmpty()) {
+            String userId = extras.getString("USER_ID");
+            bundle.putString("USER_ID", userId);
+            profileFragment.setArguments(bundle);
+            replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
+        }
     }
+}
 }
 
 

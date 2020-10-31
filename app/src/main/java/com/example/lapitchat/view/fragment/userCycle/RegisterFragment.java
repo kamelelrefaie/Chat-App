@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
+import com.example.lapitchat.helper.notification.Token;
 import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -33,6 +35,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
+import static com.example.lapitchat.helper.HelperMethods.updateToken;
 
 public class RegisterFragment extends BaseFragment {
 
@@ -108,7 +111,7 @@ public class RegisterFragment extends BaseFragment {
                             // Sign in success,
 
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                             uID = currentUser.getUid();
+                            uID = currentUser.getUid();
 
                             database = FirebaseDatabase.getInstance().getReference().child("Users").child(uID);
 
@@ -117,7 +120,6 @@ public class RegisterFragment extends BaseFragment {
                             userMap.put("status", "hey iam using chat app");
                             userMap.put("image", "default");
                             userMap.put("thumb_image", "default");
-
 
 
                             //set database
@@ -143,6 +145,8 @@ public class RegisterFragment extends BaseFragment {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     loadingDialog.dismissDialog();
+//update token
+                    updateToken();
                     //go to main activity
                     startActivity(new Intent(getActivity(), MainActivity.class));
                     getActivity().finish();
@@ -152,7 +156,6 @@ public class RegisterFragment extends BaseFragment {
             }
         });
     }
-
 
 
 }

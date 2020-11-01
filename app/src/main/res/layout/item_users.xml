@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dim_15dp"
@@ -41,6 +42,18 @@
         android:layout_marginStart="@dimen/dim_7dp"
         android:text="@string/your_status"
         />
+
+        <ImageView
+            android:id="@+id/users_adapter_img_online"
+            android:layout_width="@dimen/dim_10dp"
+            android:layout_height="@dimen/dim_10dp"
+            android:src="@drawable/dot"
+            app:tint="@color/green"
+            android:layout_toEndOf="@id/users_adapter_txt_display"
+            android:layout_marginTop="@dimen/dim_5dp"
+            android:layout_marginStart="@dimen/dim_10dp"
+            android:visibility="invisible"
+            />
     </RelativeLayout>
 </LinearLayout>
 </androidx.cardview.widget.CardView>

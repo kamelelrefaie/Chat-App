@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.UsersViewHolder;
 import com.example.lapitchat.data.model.Users;
+import com.example.lapitchat.view.activity.MainActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -151,10 +152,13 @@ public class UsersFragment extends BaseFragment {
     }
 
     // send to main activity
+
     @Override
     public void onBack() {
         startActivity(new Intent(getActivity(), mainActivity.getClass()));
     }
+
+
 
     // running adapter
     @Override

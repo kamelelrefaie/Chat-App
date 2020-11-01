@@ -26,6 +26,7 @@ import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersF
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -53,6 +54,7 @@ public class MainActivity extends BaseActivity {
 
     long backTime;
     private FirebaseAuth mAuth;
+    private DatabaseReference userDatabaseReference;
     public RequestMainFragment requestMainFragment;
 
     private ProfileFragment profileFragment;
@@ -64,7 +66,9 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         //use bundle to send information
-            notificationTab();
+
+
+        notificationTab();
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -137,9 +141,17 @@ public class MainActivity extends BaseActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             sendToStart();
+        }else{
+            userDatabaseReference = FirebaseDatabase.getInstance().getReference()
+                    .child("Users").child(mAuth.getCurrentUser().getUid());
+            userDatabaseReference.child("online").setValue(true);
+
+
         }
 
     }
+
+
 
     /**
      *  send user to start activity
@@ -150,9 +162,15 @@ public class MainActivity extends BaseActivity {
     }
 
 
+
     @Override
     public void superBackPressed() {
         if (backTime + 2000 > System.currentTimeMillis()) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             finish();
             return;
         } else {
@@ -176,6 +194,12 @@ private void notificationTab(){
         }
     }
 }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+      userDatabaseReference.child("online").setValue(false);
+    }
 }
 
 

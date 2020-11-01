@@ -18,7 +18,11 @@ public class RequestMainFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.freagment_request, container, false);
-
+          setUpActivity();
+          mainActivity.setToolBar(view.VISIBLE);
+          mainActivity.setFrame(view.INVISIBLE);
         return view;
     }
+
+
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LapitChat</string>
+    <string name="app_name">ChatApp</string>
     <string name="this_is_main_activity">this is main activity</string>
     <string name="need_a_new_account">Need a New Account ?</string>
     <string name="create_account">Create Account</string>
@@ -11,7 +11,6 @@
     <string name="create_a_new_account">Create A New Account</string>
     <string name="loading">Loading...</string>
     <string name="already_have_account">ALREADY HAVE ACCOUNT ?</string>
-    <string name="welcome_to_n_lapit_chat">Welcome To\n Lapit Chat</string>
     <string name="login_to_your_account">login to your account</string>
     <string name="requests">REQUESTS</string>
     <string name="chat">CHAT</string>
@@ -34,6 +33,7 @@
     <string name="decline_friend_request">decline friend request</string>
     <string name="done_sending_friend_request">done sending request</string>
     <string name="friend_request">Friend Request</string>
+    <string name="welcome_to_n_chat_app">welcome to \n chat app</string>
 
 
 </resources>

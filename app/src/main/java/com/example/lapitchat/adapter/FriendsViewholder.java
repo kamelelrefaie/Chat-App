@@ -50,8 +50,8 @@ public class FriendsViewholder extends RecyclerView.ViewHolder {
         onLoadImageFromUrlOff(usersAdapterImg,string,context);
     }
 
-    public void setImageOnline(boolean online) {
-        if(online){
+    public void setImageOnline(String online) {
+        if(online.equals("Online")){
             usersAdapterImgOnline.setVisibility(View.VISIBLE);
         }else{
             usersAdapterImgOnline.setVisibility(View.INVISIBLE);

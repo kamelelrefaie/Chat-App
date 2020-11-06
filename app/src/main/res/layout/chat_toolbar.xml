@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_toolbar_sub_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/chat_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ToolBarStyle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@id/chat_toolbar"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/chat_toolbar_back"
+            android:layout_width="@dimen/dim_60dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:src="@drawable/ic_back" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_toEndOf="@+id/chat_toolbar_back"
+            android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/chat_toolbar_username"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+           android:layout_weight="4"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/txt_20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/chat_toolbar_last_seen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:textSize="@dimen/txt_16sp"
+            android:textColor="@android:color/white"
+            />
+
+</LinearLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/chat_toolbar_img"
+            android:layout_width="@dimen/dim_36dp"
+            android:layout_height="@dimen/dim_36dp"
+            android:src="@drawable/ic_default"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/dim_10dp"
+            />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

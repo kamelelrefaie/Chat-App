@@ -12,6 +12,7 @@ import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersF
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import butterknife.ButterKnife;
 
@@ -24,6 +25,7 @@ public class MenuContainerActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private ProfileFragment profileFragment;
     private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,29 +33,27 @@ public class MenuContainerActivity extends BaseActivity {
         ButterKnife.bind(this);
         // initialization
         mAuth = FirebaseAuth.getInstance();
-         profileFragment = new ProfileFragment();
-         bundle = new Bundle();
+        profileFragment = new ProfileFragment();
+        bundle = new Bundle();
         settingsFragment = new SettingsFragment();
         usersFragment = new UsersFragment();
 
         //get intent info this info sent from main activity
         String intentInfo = getIntent().getAction();
 
-      if(intentInfo.equals("SETTINGS")){
-        // go to settings
-          replaceFragment(getSupportFragmentManager(),R.id.menu_container_activity_frame,settingsFragment);
-      }
-      else if(intentInfo.equals("USER")){
-          // go to all user
-         replaceFragment(getSupportFragmentManager(),R.id.menu_container_activity_frame,usersFragment);
-      }
-      else if(intentInfo.equals("NOT")){
-          bundle=getIntent().getExtras();
-          profileFragment.setArguments(bundle);
+        if (intentInfo.equals("SETTINGS")) {
+            // go to settings
+            replaceFragment(getSupportFragmentManager(), R.id.menu_container_activity_frame, settingsFragment);
+        } else if (intentInfo.equals("USER")) {
+            // go to all user
+            replaceFragment(getSupportFragmentManager(), R.id.menu_container_activity_frame, usersFragment);
+        } else if (intentInfo.equals("NOT")) {
+            bundle = getIntent().getExtras();
+            profileFragment.setArguments(bundle);
 
-          replaceFragment(getSupportFragmentManager(),R.id.menu_container_activity_frame,profileFragment);
+            replaceFragment(getSupportFragmentManager(), R.id.menu_container_activity_frame, profileFragment);
 
-      }
+        }
 
     }
 
@@ -62,13 +62,13 @@ public class MenuContainerActivity extends BaseActivity {
         super.onStart();
         userDatabaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("Users").child(mAuth.getCurrentUser().getUid());
-        userDatabaseReference.child("online").setValue(true);
+        userDatabaseReference.child("online").setValue("Online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        userDatabaseReference.child("online").setValue(false);
+        userDatabaseReference.child("online").setValue(ServerValue.TIMESTAMP);
 
     }
 }

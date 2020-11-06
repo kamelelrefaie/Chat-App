@@ -44,6 +44,7 @@ import retrofit2.Response;
 
 import static com.example.lapitchat.data.api.RetrofitClient.getClient;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrl;
+import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrlOff;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class ProfileFragment extends BaseFragment {
@@ -156,7 +157,7 @@ public class ProfileFragment extends BaseFragment {
 
                 //setting image
                 String img_url = snapshot.child("image").getValue().toString();
-                onLoadImageFromUrl(profileFragmentImg, img_url, getContext());
+                onLoadImageFromUrlOff(profileFragmentImg, img_url, getContext());
 
                 //changing btn according to app state
                 changeBtn();

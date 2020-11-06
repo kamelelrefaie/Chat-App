@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 public class OffCap extends Application {
@@ -43,7 +44,7 @@ public class OffCap extends Application {
                 try {
                     if (snapshot != null) {
                         // make user offline when he close the app
-                        userDatabaseReference.child("online").onDisconnect().setValue(false);
+                        userDatabaseReference.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
                     }
                 } catch (Exception e) {
 

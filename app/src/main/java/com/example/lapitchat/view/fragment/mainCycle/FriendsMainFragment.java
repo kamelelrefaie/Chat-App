@@ -3,6 +3,7 @@ package com.example.lapitchat.view.fragment.mainCycle;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import com.example.lapitchat.adapter.FriendsViewholder;
 import com.example.lapitchat.adapter.UsersViewHolder;
 import com.example.lapitchat.data.model.Friends;
 import com.example.lapitchat.data.model.Users;
+import com.example.lapitchat.view.activity.ChatActivity;
+import com.example.lapitchat.view.activity.MenuContainerActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.ConvFrgament;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.ProfileFragment;
@@ -38,6 +41,7 @@ import butterknife.Unbinder;
 import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class FriendsMainFragment extends BaseFragment {
+
     @BindView(R.id.friends_fragment_rv)
     RecyclerView friendsFragmentRv;
     private DatabaseReference friendDatabaseRef;
@@ -47,9 +51,8 @@ public class FriendsMainFragment extends BaseFragment {
     private DatabaseReference usersDatabaseReference;
     private FirebaseRecyclerAdapter adapter;
     private Bundle bundle;
-    private ProfileFragment profileFragment;
     private ConvFrgament convFrgament;
-
+    private Intent menuIntent;
 
     public FriendsMainFragment() {
         // Required empty public constructor
@@ -62,18 +65,24 @@ public class FriendsMainFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        // get user id
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
+
+        // ref
         friendDatabaseRef = FirebaseDatabase.getInstance().getReference().child("friends").child(currentUserId);
         usersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        // off cap
         friendDatabaseRef.keepSynced(true);
         usersDatabaseReference.keepSynced(true);
+
         //set recyclerview
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         friendsFragmentRv.setLayoutManager(layoutManager);
         friendsFragmentRv.setHasFixedSize(true);
+
         bundle = new Bundle();
-        profileFragment = new ProfileFragment();
         convFrgament = new ConvFrgament();
 
         fetch();
@@ -120,7 +129,7 @@ public class FriendsMainFragment extends BaseFragment {
                         String name = snapshot.child("name").getValue().toString();
                         String thumbImage = snapshot.child("thumb_image").getValue().toString();
                         if (snapshot.hasChild("online")) {
-                            Boolean onlineF = Boolean.valueOf(snapshot.child("online").getValue().toString());
+                            String onlineF = snapshot.child("online").getValue().toString();
                             holder.setImageOnline(onlineF);
                         }
 
@@ -137,14 +146,15 @@ public class FriendsMainFragment extends BaseFragment {
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         switch (i) {
                                             case 0:
-                                                bundle.putString("USER_ID", listUserId);
-                                                profileFragment.setArguments(bundle);
-                                                replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
+                                                menuIntent = new Intent(getActivity(), MenuContainerActivity.class);
+                                                menuIntent.setAction("NOT");
+                                                menuIntent.putExtra("USER_ID", listUserId);
+                                                startActivity(menuIntent);
                                                 break;
                                             case 1:
-                                                bundle.putString("USER_ID", listUserId);
-                                                convFrgament.setArguments(bundle);
-                                                replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, convFrgament);
+                                                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                                                intent.putExtra("USER_ID", listUserId);
+                                                startActivity(intent);
                                                 break;
                                         }
 

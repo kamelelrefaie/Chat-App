@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
@@ -146,7 +147,7 @@ public class MainActivity extends BaseActivity {
 
             userDatabaseReference = FirebaseDatabase.getInstance().getReference()
                     .child("Users").child(mAuth.getCurrentUser().getUid());
-            userDatabaseReference.child("online").setValue(true);
+            userDatabaseReference.child("online").setValue("Online");
 
 
         }
@@ -185,7 +186,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        userDatabaseReference.child("online").setValue(false);
+        userDatabaseReference.child("online").setValue(ServerValue.TIMESTAMP);
     }
 
     @Override

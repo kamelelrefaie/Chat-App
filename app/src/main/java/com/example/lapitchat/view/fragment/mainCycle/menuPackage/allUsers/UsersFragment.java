@@ -77,9 +77,6 @@ public class UsersFragment extends BaseFragment {
         // get data to fill page
         fetch();
 
-
-
-
         return view;
     }
 

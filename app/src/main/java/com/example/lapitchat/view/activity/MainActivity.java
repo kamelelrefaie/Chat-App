@@ -56,20 +56,18 @@ public class MainActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference userDatabaseReference;
     public RequestMainFragment requestMainFragment;
-
+    private Intent menuIntent;
     private ProfileFragment profileFragment;
     private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        //use bundle to send information
-
 
         notificationTab();
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -90,9 +88,6 @@ public class MainActivity extends BaseActivity {
         mainActivityTl.getTabAt(1).setIcon(R.drawable.ic_chat);
         mainActivityTl.getTabAt(2).setIcon(R.drawable.ic_friends);
 
-
-       // UpdateToken();
-
     }
 
     @Override
@@ -112,10 +107,16 @@ public class MainActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.menu_main_btn_acc:
-                replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
+                menuIntent = new Intent(this, MenuContainerActivity.class);
+                menuIntent.setAction("SETTINGS");
+                startActivity(menuIntent);
+                finish();
                 break;
             case R.id.menu_main_btn_all:
-                replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, new UsersFragment());
+                menuIntent = new Intent(this, MenuContainerActivity.class);
+                menuIntent.setAction("USER");
+                startActivity(menuIntent);
+                finish();
                 break;
         }
         return true;
@@ -141,7 +142,8 @@ public class MainActivity extends BaseActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
             sendToStart();
-        }else{
+        } else {
+
             userDatabaseReference = FirebaseDatabase.getInstance().getReference()
                     .child("Users").child(mAuth.getCurrentUser().getUid());
             userDatabaseReference.child("online").setValue(true);
@@ -152,9 +154,8 @@ public class MainActivity extends BaseActivity {
     }
 
 
-
     /**
-     *  send user to start activity
+     * send user to start activity
      */
     private void sendToStart() {
         startActivity(new Intent(MainActivity.this, StartActivity.class));
@@ -162,43 +163,40 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    private void notificationTab() {
+        profileFragment = new ProfileFragment();
+        bundle = new Bundle();
+        String intentInfo = getIntent().getAction();
+        if (intentInfo == ("USER_PAGE")) {
+            // Open Tab
+            Bundle extras = getIntent().getExtras();
+            if (!extras.isEmpty()) {
+                String userId = extras.getString("USER_ID");
+                menuIntent = new Intent(this, MenuContainerActivity.class);
+                menuIntent.setAction("NOT");
+                menuIntent.putExtra("USER_ID", userId);
 
-    @Override
-    public void superBackPressed() {
-        if (backTime + 2000 > System.currentTimeMillis()) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-            return;
-        } else {
-            Toast.makeText(MainActivity.this, "press back again to exit", Toast.LENGTH_SHORT).show();
-            backTime = System.currentTimeMillis();
+                startActivity(menuIntent);
+                finish();
+            }
         }
     }
-
-private void notificationTab(){
-    profileFragment = new ProfileFragment();
-    bundle = new Bundle();
-    String intentInfo =getIntent().getAction();
-    if(intentInfo == ("USER_PAGE") ) {
-        // Open Tab
-        Bundle extras = getIntent().getExtras();
-        if (!extras.isEmpty()) {
-            String userId = extras.getString("USER_ID");
-            bundle.putString("USER_ID", userId);
-            profileFragment.setArguments(bundle);
-            replaceFragment(getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
-        }
-    }
-}
 
     @Override
     protected void onPause() {
         super.onPause();
-      userDatabaseReference.child("online").setValue(false);
+        userDatabaseReference.child("online").setValue(false);
+    }
+
+    @Override
+    public void superBackPressed() {
+        if (backTime + 2000 > System.currentTimeMillis()) {
+            finish();
+
+        } else {
+            Toast.makeText(this, "press back again to exit", Toast.LENGTH_SHORT).show();
+            backTime = System.currentTimeMillis();
+        }
     }
 }
 

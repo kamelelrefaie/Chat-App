@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.LoadingDialog;
 import com.example.lapitchat.view.activity.MainActivity;
+import com.example.lapitchat.view.activity.StartActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
 import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -103,10 +104,7 @@ public class SettingsFragment extends BaseFragment {
         //set values
         getValues(databaseReference);
 
-        //setting activity
-        setUpActivity();
-        mainActivity.setToolBar(view.GONE);
-        mainActivity.setFrame(view.VISIBLE);
+
 
         return view;
     }
@@ -174,7 +172,7 @@ public class SettingsFragment extends BaseFragment {
                 statusFragment.setArguments(bundle);
 
                 // go to status fragment
-                replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, statusFragment);
+                replaceFragment(getActivity().getSupportFragmentManager(), R.id.menu_container_activity_frame, statusFragment);
                 break;
         }
     }
@@ -273,7 +271,7 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public void onBack() {
-        startActivity(new Intent(getActivity(), mainActivity.getClass()));
+        startActivity(new Intent(getActivity(),MainActivity.class));
+        getActivity().finish();
     }
-
 }

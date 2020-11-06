@@ -77,10 +77,8 @@ public class UsersFragment extends BaseFragment {
         // get data to fill page
         fetch();
 
-        // setup activity
-        setUpActivity();
-        mainActivity.setToolBar(view.GONE);
-        mainActivity.setFrame(view.VISIBLE);
+
+
 
         return view;
     }
@@ -131,7 +129,7 @@ public class UsersFragment extends BaseFragment {
                         profileFragment.setArguments(bundle);
 
                         // move to profile fragment
-                        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
+                        replaceFragment(getActivity().getSupportFragmentManager(), R.id.menu_container_activity_frame, profileFragment);
                     }
                 });
 
@@ -148,14 +146,16 @@ public class UsersFragment extends BaseFragment {
     @OnClick(R.id.start_toolbar_back)
     public void onViewClicked() {
         //go to main activity
-        startActivity(new Intent(getActivity(), mainActivity.getClass()));
+        startActivity(new Intent(getActivity(), MainActivity.class));
+        getActivity().finish();
     }
 
     // send to main activity
 
     @Override
     public void onBack() {
-        startActivity(new Intent(getActivity(), mainActivity.getClass()));
+        startActivity(new Intent(getActivity(), MainActivity.class));
+        getActivity().finish();
     }
 
 

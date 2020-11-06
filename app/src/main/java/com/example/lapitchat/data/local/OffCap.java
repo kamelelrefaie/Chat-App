@@ -12,38 +12,48 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class OffCap extends Application {
+    private DatabaseReference userDatabaseReference;
+    private FirebaseAuth mAuth;
 
-private DatabaseReference userDatabaseReference;
-private FirebaseAuth mAuth;
     @Override
     public void onCreate() {
         super.onCreate();
+        // enabled firebase offline capabilities
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        if (mAuth != null) {
 
+        // check if user sign in or not
+        if (mAuth != null) {
+            // get user
             mAuth = FirebaseAuth.getInstance();
 
+            //database ref
             userDatabaseReference = FirebaseDatabase.getInstance().getReference()
                     .child("Users").child(mAuth.getCurrentUser().getUid());
 
-            userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try {
-                        if (snapshot != null) {
-                            userDatabaseReference.child("online").onDisconnect().setValue(false);
-                        }
-                    } catch (Exception e) {
+            setOnlineFeature();
 
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
 
         }
+    }
+
+    public void setOnlineFeature() {
+        userDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    if (snapshot != null) {
+                        // make user offline when he close the app
+                        userDatabaseReference.child("online").onDisconnect().setValue(false);
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

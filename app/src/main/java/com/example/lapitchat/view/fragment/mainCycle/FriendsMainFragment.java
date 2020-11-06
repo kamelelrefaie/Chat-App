@@ -1,5 +1,8 @@
 package com.example.lapitchat.view.fragment.mainCycle;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.example.lapitchat.adapter.UsersViewHolder;
 import com.example.lapitchat.data.model.Friends;
 import com.example.lapitchat.data.model.Users;
 import com.example.lapitchat.view.fragment.BaseFragment;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.ConvFrgament;
+import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.ProfileFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
@@ -41,6 +46,10 @@ public class FriendsMainFragment extends BaseFragment {
     private Unbinder unbinder;
     private DatabaseReference usersDatabaseReference;
     private FirebaseRecyclerAdapter adapter;
+    private Bundle bundle;
+    private ProfileFragment profileFragment;
+    private ConvFrgament convFrgament;
+
 
     public FriendsMainFragment() {
         // Required empty public constructor
@@ -63,11 +72,13 @@ public class FriendsMainFragment extends BaseFragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         friendsFragmentRv.setLayoutManager(layoutManager);
         friendsFragmentRv.setHasFixedSize(true);
+        bundle = new Bundle();
+        profileFragment = new ProfileFragment();
+        convFrgament = new ConvFrgament();
 
-fetch();
+        fetch();
         return view;
     }
-
 
 
     // using firebase recycler
@@ -108,14 +119,40 @@ fetch();
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String name = snapshot.child("name").getValue().toString();
                         String thumbImage = snapshot.child("thumb_image").getValue().toString();
-                        if(snapshot.hasChild("online")){
+                        if (snapshot.hasChild("online")) {
                             Boolean onlineF = Boolean.valueOf(snapshot.child("online").getValue().toString());
-                              holder.setImageOnline(onlineF);
+                            holder.setImageOnline(onlineF);
                         }
 
-                        holder.setImage(thumbImage,getActivity());
+                        holder.setImage(thumbImage, getActivity());
                         holder.setTxtDisplay(name);
+                        holder.usersAdapterRoot.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                CharSequence options[] = new CharSequence[]{"open profile", "send message"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle("options");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        switch (i) {
+                                            case 0:
+                                                bundle.putString("USER_ID", listUserId);
+                                                profileFragment.setArguments(bundle);
+                                                replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, profileFragment);
+                                                break;
+                                            case 1:
+                                                bundle.putString("USER_ID", listUserId);
+                                                convFrgament.setArguments(bundle);
+                                                replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, convFrgament);
+                                                break;
+                                        }
 
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
 
 
                     }
@@ -128,8 +165,6 @@ fetch();
 
 
             }
-
-
 
 
         };

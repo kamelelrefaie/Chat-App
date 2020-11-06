@@ -3,6 +3,7 @@ package com.example.lapitchat.adapter;
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ public class FriendsViewholder extends RecyclerView.ViewHolder {
     TextView usersAdapterTxtStatus;
     @BindView(R.id.users_adapter_img_online)
     ImageView usersAdapterImgOnline;
+    @BindView(R.id.users_adapter_root)
+    public LinearLayout usersAdapterRoot;
     public View view;
 
     public FriendsViewholder(@NonNull View itemView) {

@@ -34,29 +34,39 @@ import java.util.Map;
 import static com.example.lapitchat.helper.HelperMethods.onLoadImageFromUrlOff;
 
 public class MyFireBaseMessagingService extends FirebaseMessagingService {
-    String title,message,uId;
-    String URL;
+
+   private String title,message,uId,URL;
+    private  DatabaseReference databaseReference;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
+        // get data from fcm api
         Map<String,String> data = remoteMessage.getData();
+
+        //set this data
         title=data.get("Title");
         message=data.get("Message");
         uId =data.get("UId");
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uId).child("thumb_image");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-            URL = snapshot.getValue(String.class);
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        /*
+        try to fix it
+         */
+        // make this ref point to thumb
+//        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uId).child("thumb_image");
+//
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//            URL = snapshot.getValue(String.class);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
 
@@ -81,8 +91,6 @@ public class MyFireBaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
                 .build();
-
-
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -91,9 +91,7 @@ public class ProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         unbinder = ButterKnife.bind(this, view);
-        setUpActivity();
-        mainActivity.setToolBar(view.GONE);
-        mainActivity.setFrame(view.VISIBLE);
+
 
 
         //creating loading dialog and start it
@@ -382,7 +380,7 @@ public class ProfileFragment extends BaseFragment {
 
     @Override
     public void onBack() {
-        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new UsersFragment());
+        replaceFragment(getActivity().getSupportFragmentManager(), R.id.menu_container_activity_frame, new UsersFragment());
     }
 
 

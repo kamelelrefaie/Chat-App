@@ -76,9 +76,7 @@ public class StatusFragment extends BaseFragment {
         String uID = firebaseUser.getUid();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(uID).child("status");
 
-        //setting activity
-        setUpActivity();
-        mainActivity.setFrame(view.VISIBLE);
+
 
         return view;
     }
@@ -111,12 +109,12 @@ public class StatusFragment extends BaseFragment {
     @OnClick(R.id.start_toolbar_back)
     public void onBackClicked() {
         // go to settings fragment
-        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
+        replaceFragment(getActivity().getSupportFragmentManager(), R.id.menu_container_activity_frame, new SettingsFragment());
     }
 
     @Override
     public void onBack() {
         // go to settings fragment
-        replaceFragment(getActivity().getSupportFragmentManager(), R.id.main_activity_of, new SettingsFragment());
+        replaceFragment(getActivity().getSupportFragmentManager(), R.id.menu_container_activity_frame, new SettingsFragment());
     }
 }

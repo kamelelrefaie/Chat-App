@@ -3,12 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/chat_toolbar"/>
+    <include layout="@layout/chat_toolbar" android:id="@+id/chat_toolbar_t"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/conv_fragment_rv_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/chat_toolbar_t"
+        android:layout_above="@+id/conv_fragment_ll_send"
+        />
+
     <LinearLayout
+        android:id="@+id/conv_fragment_ll_send"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dim_50dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
+
         >
         <ImageView
             android:layout_width="0dp"
@@ -30,6 +41,7 @@
                    />
            </com.google.android.material.textfield.TextInputLayout>
         <ImageView
+            android:id="@+id/conv_fragment_img_send"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"

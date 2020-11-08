@@ -8,5 +8,8 @@
     <color name="grey">#2C2B2B</color>
     <color name="red">#AC0404</color>
     <color name="green">#21B627</color>
+    <color name="transparent">#00000000</color>
+    <color name="profile_default_tint">#e0e0e0</color>
+
 
 </resources>

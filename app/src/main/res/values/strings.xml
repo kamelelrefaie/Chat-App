@@ -34,6 +34,13 @@
     <string name="done_sending_friend_request">done sending request</string>
     <string name="friend_request">Friend Request</string>
     <string name="welcome_to_n_chat_app">welcome to \n chat app</string>
+    <string name="toast_image_intent_null">image intent null</string>
+    <string name="lbl_set_profile_photo">set profile photo</string>
+    <string name="lbl_take_camera_picture">take picture</string>
+    <string name="lbl_choose_from_gallery">choose photo from gallery</string>
+    <string name="dialog_permission_title">Grant Permissions</string>
+    <string name="dialog_permission_message">This app needs permission to use this feature. You can grant them in app settings.</string>
+    <string name="go_to_settings">GOTO SETTINGS</string>
 
 
 </resources>

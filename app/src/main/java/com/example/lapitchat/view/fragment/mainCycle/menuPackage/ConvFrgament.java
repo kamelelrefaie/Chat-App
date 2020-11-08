@@ -1,22 +1,34 @@
 package com.example.lapitchat.view.fragment.mainCycle.menuPackage;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.helper.TimeAgo;
 import com.example.lapitchat.view.fragment.BaseFragment;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,10 +47,23 @@ public class ConvFrgament extends BaseFragment {
     CircleImageView chatToolbarImg;
     @BindView(R.id.chat_toolbar_last_seen)
     TextView chatToolbarLastSeen;
+    @BindView(R.id.conv_fragment_til)
+    TextInputLayout convFragmentTil;
+    @BindView(R.id.conv_fragment_img_send)
+    ImageView convFragmentImgSend;
+    @BindView(R.id.conv_fragment_ll_send)
+    LinearLayout convFragmentLlSend;
+    @BindView(R.id.chat_toolbar)
+    Toolbar chatToolbar;
+    @BindView(R.id.conv_fragment_rv_message)
+    RecyclerView convFragmentRvMessage;
     private Unbinder unbinder;
     private Bundle bundle;
     private String userId;
     private DatabaseReference userRoot;
+    private DatabaseReference rootRef;
+    private FirebaseAuth mFirebaseAuth;
+    private String currentUser;
 
     public ConvFrgament() {
         // Required empty public constructor
@@ -58,6 +83,9 @@ public class ConvFrgament extends BaseFragment {
 
         // set ref to user id and values
         userRoot = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        currentUser = mFirebaseAuth.getCurrentUser().getUid();
         setValues();
 
         return view;
@@ -78,13 +106,14 @@ public class ConvFrgament extends BaseFragment {
                     onLoadImageFromUrl(chatToolbarImg, img_url, getContext());
 
                     //set last seen
-                    String lastSeen= snapshot.child("online").getValue().toString();
-                    if(lastSeen.equals("Online")){
+                    String lastSeen = snapshot.child("online").getValue().toString();
+                    if (lastSeen.equals("Online")) {
                         chatToolbarLastSeen.setText("online");
-                    }else{
+
+                    } else {
                         TimeAgo timeAgo = new TimeAgo();
                         long timeLong = Long.parseLong(lastSeen);
-                        String getTimeAgo = timeAgo.getTimeAgo(timeLong,getActivity());
+                        String getTimeAgo = timeAgo.getTimeAgo(timeLong, getActivity());
 
                         chatToolbarLastSeen.setText(getTimeAgo);
                     }
@@ -99,6 +128,79 @@ public class ConvFrgament extends BaseFragment {
 
             }
         });
+
+        rootRef.child("chat").child(currentUser).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    if (!snapshot.hasChild(userId)) {
+                        Map chatAddMap = new HashMap();
+                        chatAddMap.put("seen", false);
+                        chatAddMap.put("timestamp", ServerValue.TIMESTAMP);
+
+                        Map chatUserMap = new HashMap();
+                        chatUserMap.put("chat" + "/" + currentUser + "/" + userId, chatAddMap);
+                        chatUserMap.put("chat" + "/" + userId + "/" + currentUser, chatAddMap);
+
+                        rootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                try {
+
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        });
+
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @OnClick(R.id.conv_fragment_img_send)
+    public void onSendViewClicked() {
+        sendMessage();
+    }
+
+    private void sendMessage() {
+        String message = convFragmentTil.getEditText().getText().toString();
+
+
+        if (!TextUtils.isEmpty(message)) {
+            String currentUserRef = "messages" + "/" + currentUser + "/" + userId;
+            String chatUserRef = "messages" + "/" + userId + "/" + currentUser;
+            DatabaseReference userMessagePush = rootRef.child("messages").child(currentUser).child(userId).push();
+            String pushId = userMessagePush.getKey();
+
+            Map messageMap = new HashMap();
+
+            messageMap.put("message", message);
+            messageMap.put("seen", false);
+            messageMap.put("type", "text");
+            messageMap.put("time", ServerValue.TIMESTAMP);
+
+            Map messageSetMap = new HashMap();
+            messageSetMap.put(currentUserRef + "/" + pushId, messageMap);
+            messageSetMap.put(chatUserRef + "/" + pushId, messageMap);
+
+            rootRef.updateChildren(messageSetMap, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+
+                }
+            });
+
+
+        }
     }
 
     @OnClick(R.id.chat_toolbar_back)

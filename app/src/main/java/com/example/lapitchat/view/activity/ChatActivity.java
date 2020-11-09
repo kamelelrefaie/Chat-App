@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.example.lapitchat.R;
-import com.example.lapitchat.view.fragment.mainCycle.menuPackage.ConvFrgament;
+import com.example.lapitchat.view.fragment.mainCycle.conversation.ConvFrgament;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

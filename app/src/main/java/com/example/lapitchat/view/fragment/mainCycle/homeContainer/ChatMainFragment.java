@@ -1,4 +1,4 @@
-package com.example.lapitchat.view.fragment.mainCycle;
+package com.example.lapitchat.view.fragment.mainCycle.homeContainer;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

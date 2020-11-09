@@ -20,4 +20,5 @@
     <dimen name="dim_5dp">5dp</dimen>
     <dimen name="dim_36dp">36dp</dimen>
     <dimen name="dim_16dp">16dp</dimen>
+    <dimen name="dim_57dp">57dp</dimen>
 </resources>

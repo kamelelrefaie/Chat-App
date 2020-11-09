@@ -2,7 +2,6 @@ package com.example.lapitchat.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,25 +15,19 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.ViewPagerAdapter;
-import com.example.lapitchat.helper.notification.Token;
-import com.example.lapitchat.view.fragment.mainCycle.ChatMainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.FriendsMainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.RequestMainFragment;
-import com.example.lapitchat.view.fragment.mainCycle.menuPackage.SettingsFragment;
+import com.example.lapitchat.view.fragment.mainCycle.homeContainer.ChatMainFragment;
+import com.example.lapitchat.view.fragment.mainCycle.homeContainer.FriendsMainFragment;
+import com.example.lapitchat.view.fragment.mainCycle.homeContainer.RequestMainFragment;
 import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.ProfileFragment;
-import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.UsersFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 /**
  * this is launcher activity

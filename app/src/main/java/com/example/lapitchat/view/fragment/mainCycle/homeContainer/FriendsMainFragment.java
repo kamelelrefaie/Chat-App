@@ -1,7 +1,6 @@
-package com.example.lapitchat.view.fragment.mainCycle;
+package com.example.lapitchat.view.fragment.mainCycle.homeContainer;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lapitchat.R;
 import com.example.lapitchat.adapter.FriendsViewholder;
-import com.example.lapitchat.adapter.UsersViewHolder;
 import com.example.lapitchat.data.model.Friends;
-import com.example.lapitchat.data.model.Users;
 import com.example.lapitchat.view.activity.ChatActivity;
 import com.example.lapitchat.view.activity.MenuContainerActivity;
 import com.example.lapitchat.view.fragment.BaseFragment;
-import com.example.lapitchat.view.fragment.mainCycle.menuPackage.ConvFrgament;
-import com.example.lapitchat.view.fragment.mainCycle.menuPackage.allUsers.ProfileFragment;
+import com.example.lapitchat.view.fragment.mainCycle.conversation.ConvFrgament;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
@@ -37,8 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-
-import static com.example.lapitchat.helper.HelperMethods.replaceFragment;
 
 public class FriendsMainFragment extends BaseFragment {
 
